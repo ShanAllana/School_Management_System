@@ -1,0 +1,70 @@
+﻿@model SchoolManagementSystem.Models.teacherattendanceviewModel
+@using SchoolManagementSystem.Models
+
+@{
+
+    ViewBag.Title = "Teacher Attendance";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+
+}   
+
+     <!-- Header -->
+        <!-- Header -->
+        <div class="header bg-primary pb-6" style="overflow-x:auto; background-color: #e0d8d8">
+    <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+        <li class="breadcrumb-item"><a href="#" style="color: black ;"><b>Dashboards</b></a></li>
+    </ol>
+
+
+    <table class="table table-striped mt-7" style=" color: black; font-size: 18px; text-align: center;">
+        <thead style="background: #d68f37; color: white;">
+            <tr>
+
+                <th scope="col">#</th>
+                <th scope="col">Teacher Id</th>
+                <th scope="col">Teacher Name</th>
+                <th scope="col">Total Time</th>
+
+
+            </tr>
+        </thead>
+        <tbody style=" font-size: 15px; text-align: center;">
+            @foreach (System.Data.DataRow row in DbHandler.getTeacherCount().Rows)
+            {
+                <tr>
+
+                    <td>@row[0].ToString()</td>
+                    <td>@row[1].ToString()</td>
+                    <td class="txt-oflo">@row[2].ToString()</td>
+                    <td>@row[3].ToString()</td>
+
+
+                </tr>}
+
+
+
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+
+      
+
+
+    
+    <!-- Argon Scripts -->
+    <!-- Core -->
+    <script src="../assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendor/js-cookie/js.cookie.js"></script>
+    <script src="../assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="../assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+    <!-- Optional JS -->
+    <script src="../assets/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="../assets/vendor/chart.js/dist/Chart.extension.js"></script>
+    <!-- Argon JS -->
+    <script src="../assets/js/argon.js?v=1.2.0"></script>

@@ -1,0 +1,268 @@
+﻿@model SchoolManagementSystem.Models.addSubjectModel
+@using SchoolManagementSystem.Models
+
+@{
+
+        ViewBag.Title = "Subject";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+
+}
+        <!-- Header -->
+        <!-- Header -->
+        <div class="header bg-primary pb-6" style="overflow-x: auto; background-color: #e0d8d8" >
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#" style="color: black ;"><b>Dashboards</b></a></li>
+            </ol>
+            <input type="button" class="btn btn-fill add-teacher text-white" value="Delete" id="delete-class-btn" onclick="deletesubject()" />
+            <button type="button" class="btn btn-fill add-teacher text-white" data-toggle="modal" data-target="#AddSubjectModal">Add Subject</button>
+
+            <table class="table table-striped mt-7" style=" color: black; font-size: 18px; text-align: center;">
+                <thead style="background: #d68f37; color: white;s">
+                    <tr>
+                        <th><input type="checkbox" id="headercheck" name="chk" onclick="selects()" value=""></th>
+                        <th scope="col">#</th>
+                        <th scope="col">Subject Name</th>
+                        <th scope="col">Date & Time</th>
+                        <th scope="col">Class</th>
+                        <th scope="col">Modify</th>
+
+                    </tr>
+                </thead>
+                <tbody id="record" style=" font-size: 15px; text-align: center;">
+                    @foreach (System.Data.DataRow row in DbHandler.getSubject().Rows)
+                    {
+                        <tr>
+                            <td><input type="checkbox" id="@row[0].ToString()" name="chk"></td>
+                            <td>@row[0].ToString()</td>
+                            <td class="txt-oflo">@row[1].ToString()</td>
+                            <td>@row[2].ToString()</td>
+                            <td class="txt-oflo">@row[3].ToString()</td>
+
+
+                            <td><input type="button" id="@row[0]" onclick="get(@Convert.ToInt32(row[0]),'@row[1].ToString()')" class="btn btn-fill add-teacher text-white" data-toggle="modal" data-target="#EditSubjectModal" value="Edit" /></td>
+
+                        </tr>}
+
+                </tbody>
+            </table>
+
+        </div>
+        <script>
+            function get(id, name) {
+                document.getElementById("Editsubjectid").value = id;
+                document.getElementById("editsubjectname").value = name;
+                document.getElementById("ListClass").value = classname;
+
+
+
+            }
+        </script>
+
+
+
+        <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+        <script type="text/javascript">
+
+            function deletesubject() {
+                var IdArray = new Array();
+                $("input:checkbox[name=chk]:checked").each(function () {
+                    IdArray.push($(this).attr("id"));
+                    //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val());
+                });
+
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    url: "../Home/DeleteSubject",
+                    data: { subjectIds: IdArray },
+
+                    success: function (response) {
+                        window.location = "../Home/subject";
+                    }
+                });
+
+
+            }
+
+
+        </script>
+
+
+        <!-- Footer -->
+        
+
+    <!-- Argon Scripts -->
+    <!-- Core -->
+    <script src="../assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendor/js-cookie/js.cookie.js"></script>
+    <script src="../assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="../assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+    <!-- Optional JS -->
+    <script src="../assets/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="../assets/vendor/chart.js/dist/Chart.extension.js"></script>
+    <!-- Argon JS -->
+    <script src="../assets/js/argon.js?v=1.2.0"></script>
+
+
+
+    <link href="~/Content/modal.css" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+    <div class="container">
+        <!-- Trigger the modal with a button -->
+        <!-- Modal -->
+        <div class="modal fade" id="AddSubjectModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    @*<div class="modal-header">
+
+                            <h4 class="modal-title">Add Student</h4>
+                        </div>*@
+                    <div class="modal-body" style="background-color:#e0d8d8;">
+                        <!-- Chekkkkk-->
+                        @using (Html.BeginForm("addSubject", "Home", FormMethod.Post))
+                        {
+                            <div class="alert alert-outline-dark" role="alert">
+                                <h4 class="alert-heading" style="color: #d68f37; font-size: 20px;"><center>Add Subject</center></h4>
+                            </div>
+                            <div class=" form-group row">
+
+                                <div class="col-sm-9 center">
+                                    @Html.TextBoxFor(u => u.subject_name, new { @type = "text", @class = "form-control", @id = "inputsubjectname", @placeholder = "Subject Name", @required = "required" })
+                                    @*<input type="text" class="form-control" id="subjectname" placeholder="Subject Name">*@
+                                </div>
+                            </div>
+                            <div class="form-group row ">
+                                <div class="col-sm-9 center">
+
+                                    @Html.DropDownList("ListClass", ViewBag.ListClass as SelectList, "---Select Class---", new { @class = "form-control", @required = "required" })
+
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <input class="btn btn-outline-dark btn-lg btn-block text-white " type="submit" value="Add Subject" />
+                            </div>
+
+                        }
+
+
+                        <!-- Chekkkkk-->
+                        @*<div class="modal-footer">
+                <a href='../Home/subject' style='color:white;'<button type="button" class="btn btn-outline-dark btn-lg btn-block ">Add Subject</button></a>
+            </div>*@
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!---------------------------->
+    <!------------------------------------------------------->
+
+
+
+
+
+    <div class="container">
+        <!-- Trigger the modal with a button -->
+        <!-- Modal -->
+        <div class="modal fade" id="EditSubjectModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    @*<div class="modal-header">
+
+                            <h4 class="modal-title">Add Student</h4>
+                        </div>*@
+                    <div class="modal-body" style="background-color:#e0d8d8;">
+                        <!-- Chekkkkk-->
+                        @using (Html.BeginForm("editSubject", "Home", FormMethod.Post))
+                        {
+                            <div class="alert alert-outline-dark" role="alert">
+                                <h4 class="alert-heading" style="color: #d68f37; font-size: 20px;"><center>Edit Subject</center></h4>
+                            </div>
+                            <div class=" form-group row">
+
+                                <div class="col-sm-9 center">
+                                    @Html.HiddenFor(u => u.subject_id, new { @type = "hidden", @class = "form-control", @id = "Editsubjectid", @Name = "subjectId" })
+                                    @Html.TextBoxFor(u => u.subject_name, new { @type = "text", @class = "form-control", @id = "editsubjectname", @placeholder = "Subject Name", @Name = "subjectName", @required = "required" })
+
+                                </div>
+                            </div>
+                            <div class="form-group row ">
+                                <div class="col-sm-9 center">
+
+                                    @Html.DropDownList("ListClass", ViewBag.ListClass as SelectList, "---Select Class---", new { @class = "form-control", @id = "editclassname", @Name = "ClassId", @required = "required" })
+
+                                </div>
+                            </div>
+                            @*<div class="form-group row ">
+
+                    <div class="col-sm-9 center">
+                       Html.TextBoxFor(u => u.subject_date, new { @type = "datetime-local", @class = "form-control", @id = "editsubjectdate" })
+
+                    </div>
+                </div>*@
+
+                            <div class="modal-footer">
+                                <input class="btn btn-outline-dark btn-lg btn-block text-white" type="submit" value="Edit Subject" />
+                            </div>
+
+                        }
+                        <!-- Chekkkkk-->
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!---------------------------->
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#txtsearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#record tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+
+        function selects() {
+            var ele = document.getElementsByName('chk');
+            var headercheck = document.getElementById('headercheck');
+            var check = headercheck.checked;
+            for (var i = 0; i < ele.length; i++) {
+                if (check == true) {
+                    ele[i].checked = true;
+                }
+                else {
+                    ele[i].checked = false;
+
+                }
+
+            }
+        }
+
+
+    </script>
+
+
+    <!------------------>

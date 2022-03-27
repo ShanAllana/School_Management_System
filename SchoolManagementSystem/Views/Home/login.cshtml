@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   
+    <title>School Management System</title>
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/brand/TopLogo.png" type="image/png">
+    <link href="~/assets/css/loginstyle.css" rel="stylesheet" />
+</head>
+<body style=" background-image: url(../assets/img/theme/background.jpg);">
+        <div class="logininbox">
+
+            <h1>Login Here</h1>
+            <form>
+                @*<div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">User Name</label>
+                    <input type="text" class="form-control btn btn-outline-danger" placeholder="Enter User Name" id="username">
+                </div>*@
+                <p>User Name</p>
+                <input type="text" name="" placeholder="Enter User Name" id="username">
+                <p>Password</p>
+                <input type="password" name="" placeholder="Enter Password" id="password">
+                <input type="submit"  name="" placeholder="Login" value='Login' onclick="loginUser()">
+            </form>
+        </div>
+
+    </body>
+
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+<script>
+
+    function loginUser()
+    {
+        var uname = document.getElementById("username").value;
+        var pass = document.getElementById("password").value;
+        if(uname=="" || pass=="")
+        {
+            alert("Fill all the fields");
+        }
+        else
+        {
+           
+            $.ajax({
+                type: "POST",
+                url: "../Home/LoginUser",
+                data: {
+                    "UserName": uname,
+                    "Password": pass
+                },
+                success: function (response) {
+                    if(response==1)
+                    {
+                        alert("Login Successful");
+                        createSession(uname);
+                    }
+                    else if (response == 3) {
+                        alert("User doen't exists");
+                    }
+                    else if(response == 2)
+                    {
+                        alert("Wrong password");
+                    }
+                }
+            });
+
+        }
+    }
+    function createSession(uname)
+    {
+        localStorage.setItem('username', uname);
+      
+        window.location.href = "http://localhost:16852/Home/Index";
+    }
+
+    //======
+    function onDashBoardLoad() {
+        var uname= localStorage.getItem('username');
+        if (uname == null || uname == "" || uname == "null")
+        {
+            
+        }
+        else {
+            window.location.href = "http://localhost:16852/Home/Index";
+        }
+    }
+    window.onload = onDashBoardLoad;
+    //=====
+</script>
+</html>

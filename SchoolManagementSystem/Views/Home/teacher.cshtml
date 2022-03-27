@@ -1,0 +1,381 @@
+﻿@model SchoolManagementSystem.Models.addTeacherModel
+@using SchoolManagementSystem.Models;
+
+@{
+
+    ViewBag.Title = "Teacher";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+
+}
+
+
+        <!-- Header -->
+        <!-- Header -->
+        <div class="header bg-primary pb-6" style="overflow-x:auto; background-color: #e0d8d8">
+    <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+        <li class="breadcrumb-item"><a href="#" style="color: black ;"><b>Dashboards</b></a></li>
+    </ol>
+    <input type="button" class="btn btn-fill add-teacher text-white" value="Delete" id="delete-class-btn" onclick="deleteteacher()" />
+    <button type="button" class="btn btn-fill add-teacher text-white" data-toggle="modal" data-target="#AddTeacherModal">Add Teacher</button>
+
+    <table class="table table-striped mt-7" style=" color: black; font-size: 18px; text-align: center;">
+
+        <thead style="background: #d68f37; color: white;">
+            <tr>
+                <th><input type="checkbox" id="headercheck" name="chk" onclick="selects()"></th>
+                <th scope="col">#</th>
+                <th scope="col">Teacher Name</th>
+                <th scope="col">Salary</th>
+                <th scope="col">Email</th>
+                <th scope="col">Joining Date</th>
+                <th scope="col">Leaving Date</th>
+                <th scope="col">Class ID</th>
+                <th scope="col">Modify</th>
+
+            </tr>
+        </thead>
+        <tbody id="record" style=" font-size: 15px; text-align: center;">
+
+
+            @foreach (System.Data.DataRow row in DbHandler.getTeachers().Rows)
+            {
+                <tr>
+                    <td><input type="checkbox" id="@row[0].ToString()" name="chk"></td>
+                    <td>@row[0].ToString()</td>
+                    <td class="txt-oflo">@row[1].ToString()</td>
+                    <td>@row[2].ToString()</td>
+                    <td class="txt-oflo">@row[3].ToString()</td>
+                    <td class="txt-oflo">@row[4].ToString()</td>
+                    <td class="txt-oflo">@row[5].ToString()</td>
+                    <td class="txt-oflo">@row[6].ToString()</td>
+                    <td><input type="button" id="@row[0]" onclick="gett(@Convert.ToInt32(row[0]),'@row[5].ToString()');" class="btn btn-fill add-teacher text-white" data-toggle="modal" data-target="#EditTeacherModal" value="Edit" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+
+      
+
+
+
+        <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>
+        <script type="text/javascript">
+
+            function deleteteacher() {
+                var IdArray = new Array();
+                $("input:checkbox[name=chk]:checked").each(function () {
+                    IdArray.push($(this).attr("id"));
+                    //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val());
+                });
+
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    url: "../Home/DeleteTeacher",
+                    data: { teacherIds: IdArray },
+
+                    success: function (response) {
+                        window.location = "../Home/teacher";
+                    }
+                });
+
+
+            }
+
+            
+          function gett(id,lDate) {
+              
+              document.getElementById("Editempid").value = id;
+              document.getElementById("leavingdate").value = lDate;
+                               
+          }
+     
+        </script>
+
+
+        <!-- Footer -->
+
+    <!-- Argon Scripts -->
+    <!-- Core -->
+    <script src="../assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/vendor/js-cookie/js.cookie.js"></script>
+    <script src="../assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="../assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+    <!-- Optional JS -->
+    <script src="../assets/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="../assets/vendor/chart.js/dist/Chart.extension.js"></script>
+    <!-- Argon JS -->
+    <script src="../assets/js/argon.js?v=1.2.0"></script>
+
+
+    <!------------------------------------------------------->
+
+
+
+    <link href="~/Content/modal.css" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+    <div class="container">
+        <!-- Trigger the modal with a button -->
+        <!-- Modal -->
+        <div class="modal fade" id="AddTeacherModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    @*<div class="modal-header">
+
+                            <h4 class="modal-title">Add Student</h4>
+                        </div>*@
+                    <div class="modal-body" style="background-color:#e0d8d8;">
+                        <!-- Chekkkkk-->
+                        @using (Html.BeginForm("addteacher", "Home", FormMethod.Post))
+                        {
+                            <div class="alert alert-outline-dark" role="alert">
+                                <h4 class="alert-heading" style="color: #d68f37; font-size: 20px;"><center>Add Teacher</center></h4>
+                            </div>
+
+                            <div class="form-group row">
+
+                                <div class="col-sm-9 center">
+                                    @Html.DropDownList("Listemp", ViewBag.Listemp as SelectList, "---Select Employee---", new { @class = "form-control", onchange = "getData(this.value)", @required = "required" })
+                                    @*@Html.TextBoxFor(u => u.teacher_name, new { @type = "text", @class = "form-control", @id = "inputteachername", @placeholder = "Teacher Name" })*@
+
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+
+                    <div class="col-sm-9 center">
+                        @Html.TextBoxFor(u => u.cnic,new { @type = "text", @class = "form-control", @id = "inputcnicname", @Name = "inputcnicname", @placeholder = "CNIC" })
+                    </div>
+                </div>*@
+                            <div class="form-group row">
+                                <div class="col-sm-9 center">
+                                    @Html.TextBoxFor(u => u.salary, new { @type = "text", @class = "form-control", @id = "inputsalaryname", @Name = "inputsalaryname", @placeholder = "Salary", @required = "required" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-9 center">
+                                    @Html.TextBoxFor(u => u.email, new { @type = "text", @class = "form-control", @id = "inputemailname", @Name = "inputemailname", @placeholder = "Email", @required = "required" })
+
+                                </div>
+                            </div>
+
+                            @*<div class="form-group row">
+                    <div class="col-sm-9 center">
+                        @Html.TextBoxFor(u => u.password, new { @type = "text", @class = "form-control", @id = "inputpasswordname", @Name = "inputpasswordname", @placeholder = "Password" })
+
+                    </div>
+                </div>*@
+
+                            <div class="form-group row">
+                                <div class="col-sm-9 center">
+                                    @Html.DropDownList("ListClass", ViewBag.ListClass as SelectList, "---Select Class---", new { @class = "form-control", @required = "required" })
+
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-outline-dark btn-lg btn-block text-white " value="Add Teacher" />
+                            </div>
+
+                        }
+                        <!-- Chekkkkk-->
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+        function getData(value) {
+
+           
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:16852/Home/getEmpDetails',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "EmpId": value
+                }),
+                success: function (Response) {
+                    var res = Response.split(":");
+                    $("#inputsalaryname").val(res[1]);
+                    $("#inputemailname").val(res[0]);
+                    calculateTotal();
+                },
+                error: function () {
+                    alert("Error!");
+                }
+            });
+        }
+
+        function geteData(value) {
+
+           
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:16852/Home/getEmpDetails',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "EmpId": value
+                }),
+                success: function (Response) {
+                    var res = Response.split(":");
+                    $("#salaryname").val(res[1]);
+                    $("#emailname").val(res[0]);
+                    calculateTotal();
+                },
+                error: function () {
+                    alert("Error!");
+                }
+            });
+        }
+
+    </script>
+
+
+
+
+    <!------------------------------>
+    <!------------------------------------------------------->
+
+
+
+
+
+
+    <div class="container">
+        <!-- Trigger the modal with a button -->
+        <!-- Modal -->
+        <div class="modal fade" id="EditTeacherModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    @*<div class="modal-header">
+
+                            <h4 class="modal-title">Add Student</h4>
+                        </div>*@
+                    <div class="modal-body" style="background-color:#e0d8d8;">
+                        <!-- Chekkkkk-->
+                        @using (Html.BeginForm("editteacher", "Home", FormMethod.Post))
+                        {
+
+                            <div class="alert alert-outline-dark" role="alert">
+                                <h4 class="alert-heading" style="color: #d68f37; font-size: 20px;"><center>Edit Teacher</center></h4>
+                            </div>
+
+                            <div class="form-group row">
+
+                                <div class="col-sm-9 center">
+                                    @Html.HiddenFor(u => u.teacher_id, new { @type = "hidden", @class = "form-control", @id = "Editempid", @Name = "empId" })
+                                    @Html.DropDownList("Listemp", ViewBag.Listemp as SelectList, "---Select Employee---", new { @class = "form-control", onchange = "geteData(this.value)", @required = "required" })
+                                    @*@Html.TextBoxFor(u => u.teacher_name, new { @type = "text", @class = "form-control", @id = "inputteachername", @placeholder = "Teacher Name" })*@
+
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+
+                    <div class="col-sm-9 center">
+                        @Html.TextBoxFor(u => u.cnic, new { @type = "text", @class = "form-control", @id = "cnicname", @placeholder = "CNIC" , @Name ="cn" })
+                    </div>
+                </div>*@
+                            <div class="form-group row">
+                                <div class="col-sm-9 center">
+                                    @Html.TextBoxFor(u => u.salary, new { @type = "text", @class = "form-control", @id = "salaryname", @placeholder = "Salary", @required = "required" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-9 center">
+                                    @Html.TextBoxFor(u => u.email, new { @type = "text", @class = "form-control", @id = "emailname", @placeholder = "Email", @required = "required" })
+
+                                </div>
+                            </div>
+
+                            @*<div class="form-group row">
+                    <div class="col-sm-9 center">
+                        @Html.TextBoxFor(u => u.password, new { @type = "text", @class = "form-control", @id = "passwordname", @placeholder = "Password" , @Name = "pass"})
+
+                    </div>
+                </div>*@
+
+                            <div class="form-group row">
+                                <div class="col-sm-9 center">
+                                    @Html.DropDownList("ListClass", ViewBag.ListClass as SelectList, "---Select Class---", new { @class = "form-control", @Name = "cid", @required = "required" })
+
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-9 center">
+                                    @Html.TextBoxFor(u => u.leaving_date, new { @type = "datetime-local", @class = "form-control", @id = "leavingdate", @placeholder = "Leaving Date", @Name = "ld" })
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-outline-dark btn-lg btn-block text-white" value="Edit Teacher" />
+                            </div>
+
+                        }
+
+                        <!-- Chekkkkk-->
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!------------------------------>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#txtsearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#record tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+
+        function selects() {
+            var ele = document.getElementsByName('chk');
+            var headercheck = document.getElementById('headercheck');
+            var check = headercheck.checked;
+            for (var i = 0; i < ele.length; i++) {
+                if (check == true) {
+                    ele[i].checked = true;
+                }
+                else {
+                    ele[i].checked = false;
+
+                }
+
+            }
+        }
+
+
+    </script>
+
